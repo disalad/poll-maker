@@ -10,8 +10,9 @@ CREATE TABLE users (
     website VARCHAR(300) NULL,
     twitter_username VARCHAR(300) NULL,
     `role` VARCHAR(20) DEFAULT 'voter',
-    profile_last_updated TIMESTAMP DEFAULT NULL,
-    approved BOOLEAN DEFAULT FALSE NOT NULL
+    age_range ENUM('11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80') NOT NULL,
+    gender ENUM('male', 'female', 'other'),
+    profile_last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL
 );
 
 CREATE TABLE polls (
