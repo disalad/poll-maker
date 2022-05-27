@@ -1,8 +1,6 @@
 <?php
-require_once '../config/db-connection.php';
-require_once '../helpers/auth-functions.php';
-
-start_session();
+require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
 
 authed();
 
@@ -26,7 +24,7 @@ function delete_acc($username, $password)
     session_unset();
     session_destroy();
 
-    header("Location: /auth/login.php");
+    header("Location: /auth/login");
     exit();
 }
 
@@ -58,7 +56,7 @@ if (isset($_POST['submit'])) {
     <div class="container">
         <h3 class="mt-5 mb-4">Heisenberge Polls</h3>
         <h6 class="mt-3 mb-4"><?php echo $message ?></h6>
-        <form action="/auth/delete-account.php" method="POST" class="row g-3 mb-4">
+        <form action="/auth/delete-account" method="POST" class="row g-3 mb-4">
             <!-- Password -->
             <div class="col-md-12">
                 <label class="form-label h6" for="inputPassword">Password</label>

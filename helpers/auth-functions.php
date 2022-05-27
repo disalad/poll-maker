@@ -1,7 +1,7 @@
 <?php
 function authed(){
     if (!isset($_SESSION["username"])) {
-        header("Location: /auth/login.php");
+        header("Location: /auth/login");
         exit(); // prevent further execution, should there be more code that follows
     }
 }

@@ -1,18 +1,14 @@
 <?php
-require_once '../config/db-connection.php';
-require_once '../helpers/auth-functions.php';
-
-start_session();
+require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
 
 authed();
 
 $message = null;
 
-function reset_password($username, $old_password, $new_password)
+function reset_password($connection, $username, $old_password, $new_password)
 {
-    global $connection;
     $password_regex = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/';
-    // $fetched = db_check_existing_data($connection, $username, 'username');
     $query = "SELECT * FROM users WHERE username = '$username'";
     $result = mysqli_fetch_assoc($connection->query($query));
     $old_hash = crypt($old_password, '$6$10$QR7BxavGpWqUHwm$');
@@ -26,13 +22,12 @@ function reset_password($username, $old_password, $new_password)
 
     $new_hash = crypt($new_password, '$6$10$QR7BxavGpWqUHwm$');
 
-    // db_update($connection, 'password', $new_hash, $result['id']);
     $query = "UPDATE users SET password='$new_hash' WHERE id=" . $result['id'];
     $connection->query($query);
 
     session_unset();
 
-    header("Location: /auth/login.php");
+    header("Location: /auth/login");
     exit();
 }
 
@@ -41,7 +36,7 @@ if (isset($_POST['submit'])) {
     $new_password = mysqli_real_escape_string($connection, $_POST['new-password']);
     $username = $_SESSION['username'];
 
-    $message = reset_password($username, $old_password, $new_password);
+    $message = reset_password($connection, $username, $old_password, $new_password);
 }
 
 ?>
@@ -61,7 +56,7 @@ if (isset($_POST['submit'])) {
     <div class="container">
         <h3 class="mt-5 mb-4">Heisenberge Polls</h3>
         <h6 class="mt-3 mb-4"><?php echo $message ?></h6>
-        <form action="/auth/reset-password.php" method="POST" class="row g-3 mb-4">
+        <form action="/auth/reset-password" method="POST" class="row g-3 mb-4">
             <!-- Old Password -->
             <div class="col-md-12">
                 <label class="form-label h6" for="inputOldPassword">Old Password</label>

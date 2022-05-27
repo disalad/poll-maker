@@ -1,8 +1,6 @@
 <?php
-require_once '../config/db-connection.php';
-require_once '../helpers/auth-functions.php';
-
-start_session();
+require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
 
 not_authed();
 
@@ -58,7 +56,7 @@ if (isset($_POST['submit'])) {
     <div class="container">
         <h3 class="mt-5 mb-4">Heisenberge Polls</h3>
         <h6 class="mt-3 mb-4"><?php echo $message ?></h6>
-        <form action="/auth/login.php" method="POST" class="row g-3 mb-4">
+        <form action="/auth/login" method="POST" class="row g-3 mb-4">
             <!-- Username -->
             <div class="col-md-12">
                 <label class="form-label h6" for="inputUsername">Username</label>
@@ -73,7 +71,7 @@ if (isset($_POST['submit'])) {
                 <button type="submit" class="btn btn-primary" name="submit">Register</button>
             </div>
         </form>
-        <h4>Don't have an account? <a href="<?php echo "/auth/register.php" ?>">Register</a></h4>
+        <h4>Don't have an account? <a href="<?php echo "/auth/register" ?>">Register</a></h4>
     </div>
 </body>
 

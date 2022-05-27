@@ -1,8 +1,6 @@
 <?php
-require_once '../config/db-connection.php';
-require_once '../helpers/auth-functions.php';
-
-start_session();
+require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
 
 not_authed();
 
@@ -16,12 +14,11 @@ $user_inputs = array(
     "gender" => null
 );
 
-function validate_inputs($inputs)
+function validate_inputs($connection, $inputs)
 {
     $email_regex = '/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/';
     $password_regex = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/';
     $alphanumeric_regex = '/[^A-Za-z0-9]/';
-    global $connection;
 
     // Validate user inputs
     if (preg_match($alphanumeric_regex, $inputs["username"])) {
@@ -63,9 +60,8 @@ function validate_inputs($inputs)
     }
 }
 
-function create_user($inputs)
+function create_user($connection, $inputs)
 {
-    global $connection;
     // Generate a hash of the password
     $hash = crypt($inputs["password"], '$6$10$QR7BxavGpWqUHwm$');
 
@@ -98,11 +94,11 @@ if (isset($_POST['submit'])) {
         $user_inputs["age_range"] = mysqli_real_escape_string($connection, $_POST['age_range']);
         $user_inputs["gender"] = mysqli_real_escape_string($connection, $_POST['gender']);
 
-        $message = validate_inputs($user_inputs);
+        $message = validate_inputs($connection, $user_inputs);
 
         // Create the user if there is no error message
         if (!$message) {
-            create_user($user_inputs);
+            create_user($connection, $user_inputs);
         }
     } catch (Exception $e) {
         die("Internal Server Error" . $e);
@@ -125,7 +121,7 @@ if (isset($_POST['submit'])) {
     <div class="container">
         <h3 class="mt-5">Heisenberge Polls</h3>
         <h3><?php echo $message ?></h3>
-        <form action="/auth/register.php" method="POST" class="row g-3 mb-4 mt-4">
+        <form action="/auth/register" method="POST" class="row g-3 mb-4 mt-4">
             <!-- Username -->
             <div class="col-md-6">
                 <label class="form-label h6" for="inputUsername">Username</label>
@@ -184,7 +180,7 @@ if (isset($_POST['submit'])) {
                 <button type="submit" class="btn btn-primary" name="submit">Register</button>
             </div>
         </form>
-        <h4>Already have an account? <a href="/auth/login.php">Log In</a></h4>
+        <h4>Already have an account? <a href="/auth/login">Log In</a></h4>
         <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
     </div>
 </body>

@@ -2,8 +2,6 @@
 require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
 require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
 
-// start_session();
-
 authed();
 
 $message = null;
@@ -119,7 +117,7 @@ if (isset($_POST['submit'])) {
     <div class="container">
         <h3 class="mt-5">Heisenberge Polls</h3>
         <h5><?php echo $message ?></h3>
-        <form action="/poll/create.php" method="POST" class="row g-3 mb-4 mt-4">
+        <form action="/poll/create" method="POST" class="row g-3 mb-4 mt-4">
             <!-- Title -->
             <div class="col-md-12">
                 <label for="inputTitle" class="form-label h6">Title</label>
