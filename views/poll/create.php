@@ -14,8 +14,7 @@ $user_inputs = array(
     "options" => null
 );
 
-function esc_str ($str) {
-    global $connection;
+function esc_str ($connection, $str) {
     return mysqli_real_escape_string($connection, $str);
 }
 
@@ -34,9 +33,9 @@ function validate_inputs($inputs)
     }
 }
 
-function create_poll($inputs, $owner_id)
+function create_poll($connection, $inputs, $owner_id)
 {
-    global $connection;
+    $con = $connection;
     $title = $inputs["title"];
     $description = $inputs["description"];
     $result_visibility = $inputs["result_visibility"];
@@ -59,7 +58,7 @@ function create_poll($inputs, $owner_id)
         $poll_id = mysqli_fetch_assoc($connection->query($query))["id"];
 
         foreach($inputs["options"] as $idx => $opt) {
-            $opt = esc_str($opt);
+            $opt = esc_str($con, $opt);
             $query = "INSERT INTO `candidates` (`name`, poll_id) VALUES ('$opt', $poll_id);";
             $connection->query($query);
         }
@@ -80,11 +79,12 @@ function create_poll($inputs, $owner_id)
 
 if (isset($_POST['submit'])) {
     try {
+        $con = $connection;
         // Escape user inputs to prevent sqli
-        $user_inputs["title"] = esc_str($_POST['title']);
-        $user_inputs["description"] = esc_str($_POST['description']);
-        $user_inputs["result_visibility"] = esc_str($_POST['result_visibility']);
-        $user_inputs["end_date"] = esc_str($_POST['end_date']);
+        $user_inputs["title"] = esc_str($con, $_POST['title']);
+        $user_inputs["description"] = esc_str($con, $_POST['description']);
+        $user_inputs["result_visibility"] = esc_str($con, $_POST['result_visibility']);
+        $user_inputs["end_date"] = esc_str($con, $_POST['end_date']);
         $user_inputs["poll_publicity"] = isset($_POST['poll_publicity']) ? true : false;
         $user_inputs["options"] = $_POST['options'];
 
@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
 
         // Create the poll if there is no error message
         if (!$message) {
-            create_poll($user_inputs, $owner_id);
+            create_poll($connection, $user_inputs, $owner_id);
         }
     } catch (Exception $e) {
         die("Internal Server Error" . $e);

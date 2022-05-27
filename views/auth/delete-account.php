@@ -6,9 +6,8 @@ authed();
 
 $message = null;
 
-function delete_acc($username, $password)
+function delete_acc($connection, $username, $password)
 {
-    global $connection;
     $password_regex = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/';
     $query = "SELECT * FROM users WHERE username = '$username'";
     $result = mysqli_fetch_assoc($connection->query($query));
@@ -34,7 +33,7 @@ if (isset($_POST['submit'])) {
         $password = mysqli_real_escape_string($connection, $_POST['password']);
         $username = $_SESSION['username'];
 
-        $message = delete_acc($username, $password);
+        $message = delete_acc($connection, $username, $password);
     } catch (Exception $e) {
         die("Internal Server Error" . $e);
     }
