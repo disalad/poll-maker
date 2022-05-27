@@ -20,15 +20,14 @@ CREATE TABLE polls (
     title VARCHAR(300),
     `description` VARCHAR(3000),
     owner_id INT REFERENCES users (id) ON DELETE SET NULL,
-    approved BOOLEAN DEFAULT FALSE NOT NULL
+    end_date DATE NULL,
+    `private` BOOLEAN DEFAULT FALSE NOT NULL,
+    results_visibility ENUM('public', 'private') DEFAULT 'public'
 );
 
 CREATE TABLE candidates (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(300) NULL,
-    display_name VARCHAR(300) NOT NULL,
-    profile_photo VARCHAR(300),
-    user_id INT REFERENCES users (id) ON DELETE CASCADE,
+    `name` VARCHAR(300) NOT NULL,
     poll_id INT REFERENCES poll (id) ON DELETE CASCADE
 );
 
