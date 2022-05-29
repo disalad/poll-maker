@@ -22,5 +22,8 @@ get('/poll/create', 'views/poll/create.php');
 post('/poll/create', 'views/poll/create.php');
 
 get('/poll/$id', 'views/poll/poll.php');
+post('/poll/$id', 'views/poll/poll.php');
+
+get('/poll/$id/success', 'views/poll/vote_success.php');
 
 any('/404','404.php');

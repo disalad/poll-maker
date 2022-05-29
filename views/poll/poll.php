@@ -16,7 +16,7 @@ function fetch_data ($con, $id) {
         exit();
     }
     // Fetch data from the database
-    $query = "SELECT * FROM candidates AS c
+    $query = "SELECT *, c.id AS candidate_id FROM candidates AS c
             INNER JOIN polls AS p ON c.poll_id = p.id
             WHERE c.poll_id = $id;";
     $res = $con->query($query);
@@ -29,18 +29,70 @@ function fetch_data ($con, $id) {
 
     // Filter the options
     while ( $row = mysqli_fetch_assoc($res) ) {
-        $filtered_option = array_intersect_key($row, array_flip(["id", "name"]));
+        $filtered_option = array_intersect_key($row, array_flip(["id", "name", "candidate_id"]));
         $GLOBALS["options"][] = $filtered_option;
         $GLOBALS["poll"]["title"] = $row["title"];
         $GLOBALS["poll"]["description"] = $row["description"];
     }
 }
 
+function post_vote($con, $p_id, $c_id) {
+    if ($c_id < 1 || $p_id < 1) {
+        header("Location: /404");
+        exit();
+    }
+    
+    // Check whether candidate id is valid with the poll id
+    $query = "SELECT * FROM candidates AS c
+            INNER JOIN polls AS p ON p.id = c.poll_id AND p.id = $p_id AND c.id = $c_id";
+    $res = $con->query($query);
+    $rowcount = mysqli_num_rows($res);
+    if ($rowcount < 1) {
+        header("Location: /404");
+        exit();
+    }
+    
+    // Get username
+    $username = $_SESSION["username"];
+    $query = "SELECT * FROM users
+            WHERE username='$username'";
+    $res = $con->query($query);
+    $rowcount = mysqli_num_rows($res);
+    if ($rowcount != 1) {
+        header("Location: /404");
+        exit();
+    }
+    $u_id = mysqli_fetch_assoc($res)["id"];
+
+    // Check whether the user has already voted or not
+    $query = "SELECT *
+            FROM users AS u
+            INNER JOIN votes AS v ON v.user_id = $u_id
+            INNER JOIN polls AS p ON p.id = $p_id";
+    $res = $con->query($query);
+    $rowcount = mysqli_num_rows($res);
+    if ($rowcount != 0) {
+        echo "Already Voted!";
+        exit();
+    }
+
+    // Insert vote to the database
+    $query = "INSERT INTO votes(poll_id, candidate_id, user_id)
+            VALUES($p_id, $c_id, $u_id);";
+    $res = $con->query($query);
+
+    header("Location: /poll/$p_id/success");
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === "GET") {
     $id = (int)esc_str($connection, $id);
     fetch_data($connection, $id);
+} else if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $p_id = (int)esc_str($connection, $id);
+    $c_id = (int)esc_str($connection, $_POST["candidate"]);
+    post_vote($connection, $p_id, $c_id);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
                     foreach ($GLOBALS["options"] as $idx => $val) {
                         echo '
                             <div class="form-check mb-3">
-                                <input class="form-check-input" type="radio" name="exampleForm" id="option_' . $val["id"] . '" />
+                                <input class="form-check-input" type="radio" name="candidate" id="option_' . $val["id"] . '" value="' . $val["candidate_id"] . '" />
                                 <label class="form-check-label" for="option_' . $val["id"] . '">'
                                     . $val["name"] .
                                 '</label>
