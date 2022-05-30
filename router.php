@@ -1,6 +1,6 @@
 <?php
 
-require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/functions.php");
 
 start_session();
 

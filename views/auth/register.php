@@ -1,6 +1,6 @@
 <?php
 require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
-require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/functions.php");
 
 not_authed();
 
@@ -80,19 +80,18 @@ function create_user($connection, $inputs)
     $_SESSION['username'] = $inputs["username"];
 
     // Redirect to root directory
-    header("Location: /");
-    exit();
+    redirectTo("/");
 }
 
 if (isset($_POST['submit'])) {
     try {
         // Escape user inputs to prevent sqli
-        $user_inputs["username"] = mysqli_real_escape_string($connection, $_POST['username']);
-        $user_inputs["password"] = mysqli_real_escape_string($connection, $_POST['password']);
-        $user_inputs["email"] = mysqli_real_escape_string($connection, $_POST['email']);
-        $user_inputs["nic"] = mysqli_real_escape_string($connection, $_POST['nic']);
-        $user_inputs["age_range"] = mysqli_real_escape_string($connection, $_POST['age_range']);
-        $user_inputs["gender"] = mysqli_real_escape_string($connection, $_POST['gender']);
+        $user_inputs["username"] = esc_str($connection, $_POST['username']);
+        $user_inputs["password"] = esc_str($connection, $_POST['password']);
+        $user_inputs["email"] = esc_str($connection, $_POST['email']);
+        $user_inputs["nic"] = esc_str($connection, $_POST['nic']);
+        $user_inputs["age_range"] = esc_str($connection, $_POST['age_range']);
+        $user_inputs["gender"] = esc_str($connection, $_POST['gender']);
 
         $message = validate_inputs($connection, $user_inputs);
 

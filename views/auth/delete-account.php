@@ -1,6 +1,6 @@
 <?php
 require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
-require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/functions.php");
 
 authed();
 
@@ -23,14 +23,13 @@ function delete_acc($connection, $username, $password)
     session_unset();
     session_destroy();
 
-    header("Location: /auth/login");
-    exit();
+    redirectTo("/auth/register");
 }
 
 if (isset($_POST['submit'])) {
     try {
         // Escape user inputs to prevent sqli
-        $password = mysqli_real_escape_string($connection, $_POST['password']);
+        $password = esc_str($connection, $_POST['password']);
         $username = $_SESSION['username'];
 
         $message = delete_acc($connection, $username, $password);

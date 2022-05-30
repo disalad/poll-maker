@@ -1,6 +1,6 @@
 <?php
 require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
-require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/functions.php");
 
 not_authed();
 
@@ -24,15 +24,14 @@ function login_user($connection, $username, $password)
     $_SESSION['username'] = $username;
 
     // Redirect to root directory
-    header("Location: /");
-    exit();
+    redirectTo("/");
 }
 
 if (isset($_POST['submit'])) {
     try {
         // Escape user inputs to prevent sqli
-        $username = mysqli_real_escape_string($connection, $_POST['username']);
-        $password = mysqli_real_escape_string($connection, $_POST['password']);
+        $username = esc_str($connection, $_POST['username']);
+        $password = esc_str($connection, $_POST['password']);
 
         $message = login_user($connection, $username, $password);
     } catch (Exception $e) {

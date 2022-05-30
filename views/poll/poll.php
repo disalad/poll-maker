@@ -1,33 +1,13 @@
 <?php
 require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
 require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/functions.php");
 
 authed();
 
 $message = null;
 
-function esc_str ($connection, $str) {
-    return mysqli_real_escape_string($connection, $str);
-}
-
-function get_username($con) {
-    $username = $_SESSION["username"];
-    $query = "SELECT * FROM users
-            WHERE username='$username'";
-    $res = $con->query($query);
-    $rowcount = mysqli_num_rows($res);
-    if ($rowcount != 1) {
-        header("Location: /404");
-        exit();
-    }
-    return mysqli_fetch_assoc($res)["id"];
-}
-
 function fetch_data ($con, $id) {
-    if ($id === 0) {
-        header("Location: /404");
-        exit();
-    }
     // Fetch data from the database
     $query = "SELECT *, c.id AS candidate_id FROM candidates AS c
             INNER JOIN polls AS p ON c.poll_id = p.id
@@ -36,8 +16,7 @@ function fetch_data ($con, $id) {
 
     // Redirect to /404 if there is no results
     if(mysqli_num_rows($res) === 0) {
-        header("Location: /404");
-        exit();
+        redirectTo("/404");
     }
 
     // Filter the options
@@ -64,8 +43,7 @@ function fetch_data ($con, $id) {
 
 function post_vote($con, $p_id, $c_id) {
     if ($c_id < 1 || $p_id < 1) {
-        header("Location: /404");
-        exit();
+        redirectTo("/404");
     }
     
     // Check whether candidate id is valid with the poll id
@@ -74,8 +52,7 @@ function post_vote($con, $p_id, $c_id) {
     $res = $con->query($query);
     $rowcount = mysqli_num_rows($res);
     if ($rowcount < 1) {
-        header("Location: /404");
-        exit();
+        redirectTo("/404");
     }
     
     // Get username
@@ -98,8 +75,7 @@ function post_vote($con, $p_id, $c_id) {
             VALUES($p_id, $c_id, $u_id);";
     $res = $con->query($query);
 
-    header("Location: /poll/$p_id/success");
-    exit();
+    redirectTo("/poll/$p_id/success");
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "GET") {

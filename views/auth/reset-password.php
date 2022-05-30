@@ -1,6 +1,6 @@
 <?php
 require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
-require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/functions.php");
 
 authed();
 
@@ -27,13 +27,12 @@ function reset_password($connection, $username, $old_password, $new_password)
 
     session_unset();
 
-    header("Location: /auth/login");
-    exit();
+    redirectTo("/auth/login");
 }
 
 if (isset($_POST['submit'])) {
-    $old_password = mysqli_real_escape_string($connection, $_POST['old-password']);
-    $new_password = mysqli_real_escape_string($connection, $_POST['new-password']);
+    $old_password = esc_str($connection, $_POST['old-password']);
+    $new_password = esc_str($connection, $_POST['new-password']);
     $username = $_SESSION['username'];
 
     $message = reset_password($connection, $username, $old_password, $new_password);

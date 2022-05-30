@@ -1,6 +1,6 @@
 <?php
 require_once("{$_SERVER['DOCUMENT_ROOT']}/config/db-connection.php");
-require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/auth-functions.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/helpers/functions.php");
 
 authed();
 
@@ -13,23 +13,6 @@ $user_inputs = array(
     "poll_publicity" => null,
     "options" => null
 );
-
-function esc_str ($connection, $str) {
-    return mysqli_real_escape_string($connection, $str);
-}
-
-function get_username($con) {
-    $username = $_SESSION["username"];
-    $query = "SELECT * FROM users
-            WHERE username='$username'";
-    $res = $con->query($query);
-    $rowcount = mysqli_num_rows($res);
-    if ($rowcount != 1) {
-        header("Location: /404");
-        exit();
-    }
-    return mysqli_fetch_assoc($res)["id"];
-}
 
 function validate_inputs($inputs)
 {
@@ -54,6 +37,7 @@ function create_poll($connection, $inputs, $owner_id)
     $result_visibility = $inputs["result_visibility"];
     $end_date = $inputs["end_date"];
     $poll_publicity = $inputs["poll_publicity"] ? 1 : 0;
+    $poll_id = null;
 
     // Insert data to tables
     try {
@@ -86,9 +70,8 @@ function create_poll($connection, $inputs, $owner_id)
         die("Internal Server Error" . $e);
     }
 
-    // Redirect to root directory
-    // header("Location: /poll/");
-    // exit();
+    // Redirect to the newly created poll
+    redirectTo("/poll/$poll_id");
 }
 
 if (isset($_POST['submit'])) {
