@@ -10,6 +10,19 @@ function esc_str ($connection, $str) {
     return mysqli_real_escape_string($connection, $str);
 }
 
+function get_username($con) {
+    $username = $_SESSION["username"];
+    $query = "SELECT * FROM users
+            WHERE username='$username'";
+    $res = $con->query($query);
+    $rowcount = mysqli_num_rows($res);
+    if ($rowcount != 1) {
+        header("Location: /404");
+        exit();
+    }
+    return mysqli_fetch_assoc($res)["id"];
+}
+
 function fetch_data ($con, $id) {
     if ($id === 0) {
         header("Location: /404");
@@ -34,6 +47,19 @@ function fetch_data ($con, $id) {
         $GLOBALS["poll"]["title"] = $row["title"];
         $GLOBALS["poll"]["description"] = $row["description"];
     }
+
+    // Get vote data if the user has already voted
+    $u_id = get_username($con);
+    $query = "SELECT c.id, c.name
+            FROM users AS u
+            INNER JOIN votes AS v ON v.user_id = $u_id
+            INNER JOIN polls AS p ON p.id = $id
+            INNER JOIN candidates AS c ON c.id = v.candidate_id";
+    $res = $con->query($query);
+    $result = mysqli_fetch_assoc($res);
+    if ($result != NULL) {
+        $GLOBALS["voted"] = $result;
+    }
 }
 
 function post_vote($con, $p_id, $c_id) {
@@ -53,16 +79,7 @@ function post_vote($con, $p_id, $c_id) {
     }
     
     // Get username
-    $username = $_SESSION["username"];
-    $query = "SELECT * FROM users
-            WHERE username='$username'";
-    $res = $con->query($query);
-    $rowcount = mysqli_num_rows($res);
-    if ($rowcount != 1) {
-        header("Location: /404");
-        exit();
-    }
-    $u_id = mysqli_fetch_assoc($res)["id"];
+    $u_id = get_username($con);
 
     // Check whether the user has already voted or not
     $query = "SELECT *
@@ -115,20 +132,26 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
             <div class="row col-12">
                 <h4 class="fw-bold text-center mt-3"></h4>
                 <h5 class="mb-3"><?php echo $GLOBALS["poll"]["title"] ?></h5>
-                <?php
-                    foreach ($GLOBALS["options"] as $idx => $val) {
-                        echo '
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="radio" name="candidate" id="option_' . $val["id"] . '" value="' . $val["candidate_id"] . '" />
-                                <label class="form-check-label" for="option_' . $val["id"] . '">'
-                                    . $val["name"] .
-                                '</label>
-                            </div>
-                        ';
-                    }
-                ?>
+                <?php foreach ($GLOBALS["options"] as $idx => $val) : ?>
+                    <div class="form-check mb-3">
+                        <input 
+                            class="form-check-input"
+                            type="radio"
+                            name="candidate"
+                            id="option_<?php echo $val["candidate_id"] ?>"
+                            value="<?php echo $val["candidate_id"] ?>"
+                            <?php echo isset($GLOBALS["voted"]) && $GLOBALS["voted"]["id"] == $val["candidate_id"] ? "checked" : NULL ?>
+                        />
+                        <label
+                            class="form-check-label"
+                            for="option_<?php echo $val["candidate_id"] ?>"
+                        >
+                            <?php echo $val["name"] ?>
+                        </label>
+                    </div>
+                <?php endforeach ?>
                 <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" <?php echo isset($GLOBALS["voted"]) && $GLOBALS["voted"] ? "disabled" : NULL ?>>Submit</button>
                 </div>
             </div>
         </form>
