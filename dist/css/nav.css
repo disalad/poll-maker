@@ -1,0 +1,37 @@
+.mr-4 {
+    margin-right: 1.5rem;
+}
+
+.dropdown {
+    display: table !important;
+    position: relative;
+}
+
+#dropdownMenuLink {
+    text-decoration: none;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0.5rem 0;
+}
+
+.dropdown-menu {
+    margin-top: 0 !important;
+    position: absolute !important;
+}
+
+.navbar-light .navbar-nav .nav-link,
+#dropdownMenuLink {
+    color: rgba(0, 0, 0, .75) !important;
+}
+
+.navbar-light .navbar-nav .nav-link:hover,
+#dropdownMenuLink:hover {
+    color: rgba(0, 0, 0, .95) !important;
+}
+
+@media screen and (min-width: 992px) {
+    .sign-up-btn,
+    .dropdown {
+        margin-left: auto !important;
+    }
+}

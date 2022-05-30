@@ -48,11 +48,13 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/css/nav.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Heisenberge Polls | Reset Password</title>
 </head>
 
 <body style="font-family:'Segoe UI'">
+    <?php include("{$_SERVER['DOCUMENT_ROOT']}/includes/nav.php") ?>
     <div class="container">
         <h3 class="mt-5 mb-4">Heisenberge Polls</h3>
         <h6 class="mt-3 mb-4"><?php echo $message ?></h6>
@@ -72,6 +74,7 @@ if (isset($_POST['submit'])) {
             </div>
         </form>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 
 </html>

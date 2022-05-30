@@ -18,6 +18,19 @@ function esc_str ($connection, $str) {
     return mysqli_real_escape_string($connection, $str);
 }
 
+function get_username($con) {
+    $username = $_SESSION["username"];
+    $query = "SELECT * FROM users
+            WHERE username='$username'";
+    $res = $con->query($query);
+    $rowcount = mysqli_num_rows($res);
+    if ($rowcount != 1) {
+        header("Location: /404");
+        exit();
+    }
+    return mysqli_fetch_assoc($res)["id"];
+}
+
 function validate_inputs($inputs)
 {
     if (!$inputs["title"] || !$inputs["end_date"] || count($inputs["options"]) < 2) {
@@ -40,7 +53,7 @@ function create_poll($connection, $inputs, $owner_id)
     $description = $inputs["description"];
     $result_visibility = $inputs["result_visibility"];
     $end_date = $inputs["end_date"];
-    $poll_publicity = $inputs["poll_publicity"];
+    $poll_publicity = $inputs["poll_publicity"] ? 1 : 0;
 
     // Insert data to tables
     try {
@@ -50,7 +63,7 @@ function create_poll($connection, $inputs, $owner_id)
 
         // Create the poll
         $query = "INSERT INTO polls(title, `description`, owner_id, end_date, `private`, results_visibility)
-                    VALUES ('$title', '$description', '$owner_id', '$end_date', '$poll_publicity', '$result_visibility');";
+                    VALUES ('$title', '$description', '$owner_id', '$end_date', $poll_publicity, '$result_visibility');";
         $connection->query($query);
         
         // Get poll id
@@ -70,6 +83,7 @@ function create_poll($connection, $inputs, $owner_id)
         // Try to rollback the changes if there is an error
         $query = "ROLLBACK;";
         $connection->query($query);
+        die("Internal Server Error" . $e);
     }
 
     // Redirect to root directory
@@ -89,7 +103,7 @@ if (isset($_POST['submit'])) {
         $user_inputs["options"] = $_POST['options'];
 
         $message = validate_inputs($user_inputs);
-        $owner_id = $_SESSION["username"];
+        $owner_id = get_username($con);
 
         // Create the poll if there is no error message
         if (!$message) {
@@ -110,12 +124,14 @@ if (isset($_POST['submit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="/dist/css/create_poll.css">
+    <link rel="stylesheet" href="/dist/css/nav.css">
     <title>Heisenberge Polls | Create</title>
 </head>
 
 <body style="font-family:'Segoe UI'">
+    <?php include("{$_SERVER['DOCUMENT_ROOT']}/includes/nav.php") ?>
     <div class="container">
-        <h3 class="mt-5">Heisenberge Polls</h3>
+        <!-- <h3 class="mt-5">Heisenberge Polls</h3> -->
         <h5><?php echo $message ?></h3>
         <form action="/poll/create" method="POST" class="row g-3 mb-4 mt-4">
             <!-- Title -->
@@ -177,7 +193,7 @@ if (isset($_POST['submit'])) {
             </div>
         </form>
         <script src="/dist/js/create_poll.js"></script>
-        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </div>
 </body>
 
