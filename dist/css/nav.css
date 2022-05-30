@@ -7,6 +7,15 @@
     position: relative;
 }
 
+#register-btn {
+    margin-left: 1rem !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+#register-btn:hover {
+    color: #fff !important;
+}
+
 #dropdownMenuLink {
     text-decoration: none;
     display: table-cell;

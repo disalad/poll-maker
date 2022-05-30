@@ -17,7 +17,7 @@
                         <a class="nav-link" href="/auth/login">Sign In</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/auth/register">Register</a>
+                        <a class="nav-link btn btn-outline-secondary rounded-pill" id="register-btn" href="/auth/register" type="button">Register</a>
                     </li>
                 <?php else : ?>
                     <li class="dropdown">
