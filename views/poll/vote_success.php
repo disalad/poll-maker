@@ -22,16 +22,26 @@ function fetch_data($con, $id)
     $u_id = get_username($con);
     $query = "SELECT *
             FROM users AS u
-            INNER JOIN votes AS v ON v.user_id = $u_id
             INNER JOIN polls AS p ON p.id = $id
+            INNER JOIN votes AS v ON v.user_id = $u_id AND u.id = $u_id
             INNER JOIN candidates AS c ON c.id = v.candidate_id";
     $res = $con->query($query);
     if (mysqli_num_rows($res) !== 1) {
         redirectTo("/404");
     }
 
+    // Check if the user is the owner
+    $query = "SELECT * FROM polls AS p
+            INNER JOIN users AS u ON p.owner_id = $u_id AND p.id = $id";
+    $res = $con->query($query);
+    $user = mysqli_fetch_assoc($res);
+
     // Set the global variable
     while ($row = mysqli_fetch_assoc($res)) {
+        if (isset($user)) {
+            $GLOBALS["private"] = false;
+            break;
+        }
         $GLOBALS["private"] = $row["results_visibility"] == "public" ? false : true;
     }
 }
@@ -39,9 +49,6 @@ function fetch_data($con, $id)
 if ($_SERVER['REQUEST_METHOD'] === "GET") {
     $id = (int)esc_str($connection, $id);
     fetch_data($connection, $id);
-    if (!isset($GLOBALS["private"])) {
-        redirectTo('/404');
-    }
 } else {
     redirectTo("/404");
 }
