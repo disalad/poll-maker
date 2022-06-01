@@ -28,11 +28,8 @@ function fetch_data ($con, $id) {
 
     // Get vote data if the user has already voted
     $u_id = get_username($con);
-    $query = "SELECT c.id, c.name
-            FROM users AS u
-            INNER JOIN votes AS v ON v.user_id = $u_id
-            INNER JOIN polls AS p ON p.id = $id
-            INNER JOIN candidates AS c ON c.id = v.candidate_id";
+    $query = "SELECT * FROM users AS u
+            INNER JOIN votes AS v ON v.user_id = $u_id AND u.id = $u_id AND v.poll_id = $id;";
     $res = $con->query($query);
     $result = mysqli_fetch_assoc($res);
     if ($result != NULL) {
@@ -58,10 +55,8 @@ function post_vote($con, $p_id, $c_id) {
     $u_id = get_username($con);
 
     // Check whether the user has already voted or not
-    $query = "SELECT *
-            FROM users AS u
-            INNER JOIN votes AS v ON v.user_id = $u_id
-            INNER JOIN polls AS p ON p.id = $p_id";
+    $query = "SELECT * FROM users AS u
+            INNER JOIN votes AS v ON v.user_id = $u_id AND u.id = $u_id AND v.poll_id = $p_id;";
     $res = $con->query($query);
     $rowcount = mysqli_num_rows($res);
     if ($rowcount != 0) {
@@ -74,7 +69,7 @@ function post_vote($con, $p_id, $c_id) {
             VALUES($p_id, $c_id, $u_id);";
     $res = $con->query($query);
 
-    redirectTo("/poll/$p_id/success");
+    redirectTo("/poll/2/success");
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "GET") {

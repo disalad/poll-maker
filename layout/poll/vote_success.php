@@ -20,11 +20,9 @@ function fetch_data($con, $id)
 
     // If the user hasn't voted, redirect to 404
     $u_id = get_username($con);
-    $query = "SELECT *
-            FROM users AS u
+    $query = "SELECT * FROM users AS u
             INNER JOIN polls AS p ON p.id = $id
-            INNER JOIN votes AS v ON v.user_id = $u_id AND u.id = $u_id
-            INNER JOIN candidates AS c ON c.id = v.candidate_id";
+            INNER JOIN votes AS v ON v.user_id = $u_id AND u.id = $u_id AND v.poll_id = $id;";
     $res = $con->query($query);
     if (mysqli_num_rows($res) !== 1) {
         redirectTo("/404");
