@@ -11,10 +11,10 @@ function fetch_data($con, $id)
     // Fetch data from the database
     $query = "SELECT * FROM polls
             WHERE id = $id;";
-    $res = $con->query($query);
+    $p_res = $con->query($query);
 
     // Redirect to /404 if there is no results
-    if (mysqli_num_rows($res) !== 1) {
+    if (mysqli_num_rows($p_res) !== 1) {
         redirectTo("/404");
     }
 
@@ -33,16 +33,20 @@ function fetch_data($con, $id)
     // Check if the user is the owner
     $query = "SELECT * FROM polls AS p
             INNER JOIN users AS u ON p.owner_id = $u_id AND p.id = $id";
-    $res = $con->query($query);
-    $user = mysqli_fetch_assoc($res);
+    $u_res = $con->query($query);
+    $user = mysqli_fetch_assoc($u_res);
 
     // Set the global variable
-    while ($row = mysqli_fetch_assoc($res)) {
+    while ($row = mysqli_fetch_assoc($p_res)) {
         if (isset($user)) {
-            $GLOBALS["private"] = false;
+            $GLOBALS["private"] = "NO";
             break;
         }
-        $GLOBALS["private"] = $row["results_visibility"] == "public" ? false : true;
+        if ($row["results_visibility"] == "public") {
+            $GLOBALS["private"] = "NO";
+        } else {
+            $GLOBALS["private"] = "YES";
+        }
     }
 }
 
@@ -86,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
                     <h1 class="font-weight-bold mb-4">Success!</h1>
                 </div>
                 <div class="col-lg-8 align-self-baseline">
-                    <?php if ($GLOBALS["private"]) : ?>
+                    <?php if ($GLOBALS["private"] != "NO") : ?>
                         <a class="btn btn-primary btn-xl" href="/poll/<?php echo $id ?>">Back to the Poll</a>
                     <?php else : ?>
                         <a class="btn btn-primary btn-xl" href="/poll/<?php echo $id ?>">Back to the Poll</a>
