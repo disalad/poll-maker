@@ -103,11 +103,20 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="/dist/css/nav.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Heisenberge Polls | Register</title>
+    <style>
+        .body-container {
+            display: flex;
+            justify-content: center;
+        }
+        .form {
+            max-width: 30rem;
+        }
+    </style>
 </head>
 
 <body style="font-family:'Segoe UI'">
     <?php include("{$_SERVER['DOCUMENT_ROOT']}/includes/nav.php") ?>
-    <div class="container">
+    <div class="container body-container">
         <h3><?php echo $message ?></h3>
         <form action="/auth/register" method="POST" class="row g-3 mb-4 mt-5 form">
             <!-- Username -->
