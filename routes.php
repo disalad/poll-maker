@@ -28,6 +28,8 @@ post('/poll/$id', 'layout/poll/poll.php');
 
 get('/poll/$id/success', 'layout/poll/vote_success.php');
 
+get('/poll/$id/delete', 'layout/poll/delete.php');
+
 get('/poll/$id/results', 'layout/poll/results.php');
 
 any('/404','404.php');
