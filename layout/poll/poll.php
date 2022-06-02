@@ -69,7 +69,7 @@ function post_vote($con, $p_id, $c_id) {
             VALUES($p_id, $c_id, $u_id);";
     $res = $con->query($query);
 
-    redirectTo("/poll/2/success");
+    redirectTo("/poll/$p_id/success");
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "GET") {
