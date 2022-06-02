@@ -1,18 +1,13 @@
 CREATE DATABASE IF NOT EXISTS `voting_system`;
 
+USE voting_system;
+
 CREATE TABLE users (
 	id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(300) UNIQUE NOT NULL,
     username VARCHAR(300) UNIQUE NOT NULL,
-    nic_number VARCHAR(300) UNIQUE NOT NULL,
     `password` VARCHAR(400) NOT NULL,
-    profile_photo VARCHAR(300),
-    website VARCHAR(300) NULL,
-    twitter_username VARCHAR(300) NULL,
-    `role` VARCHAR(20) DEFAULT 'voter',
-    age_range ENUM('11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80') NOT NULL,
-    gender ENUM('male', 'female', 'other'),
-    profile_last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL
+    gender ENUM('male', 'female', 'other')
 );
 
 CREATE TABLE polls (

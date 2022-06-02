@@ -9,8 +9,6 @@ $user_inputs = array(
     "username" => null,
     "password" => null,
     "email" => null,
-    "nic" => null,
-    "age_range" => null,
     "gender" => null
 );
 
@@ -37,7 +35,7 @@ function validate_inputs($connection, $inputs)
         return 'Enter a valid email';
     }
 
-    if (!$inputs["age_range"] || !$inputs["gender"]) {
+    if (!$inputs["gender"]) {
         return 'Fill all the required fields';
     }
 
@@ -52,12 +50,6 @@ function validate_inputs($connection, $inputs)
     if ($email_query) {
         return 'Email already exists! Log in to proceed';
     }
-
-    $query = "SELECT * FROM users WHERE nic_number = '" . $inputs['nic'] . "'";
-    $nic_query = mysqli_fetch_assoc($connection->query($query));
-    if ($nic_query) {
-        return 'NIC number already exists! Log in to proceed';
-    }
 }
 
 function create_user($connection, $inputs)
@@ -67,13 +59,11 @@ function create_user($connection, $inputs)
 
     $username = $inputs["username"];
     $email = $inputs["email"];
-    $nic = $inputs["nic"];
-    $age_range = $inputs["age_range"];
     $gender = $inputs["gender"];
 
     // Insert data to tables
-    $query = "INSERT INTO users (username, email, password, nic_number, age_range, gender)
-            VALUES ('$username', '$email', '$hash', '$nic', '$age_range', '$gender')";
+    $query = "INSERT INTO users (username, email, password, gender)
+            VALUES ('$username', '$email', '$hash', '$gender')";
     $connection->query($query);
 
     // Set the username
@@ -89,8 +79,6 @@ if (isset($_POST['submit'])) {
         $user_inputs["username"] = esc_str($connection, $_POST['username']);
         $user_inputs["password"] = esc_str($connection, $_POST['password']);
         $user_inputs["email"] = esc_str($connection, $_POST['email']);
-        $user_inputs["nic"] = esc_str($connection, $_POST['nic']);
-        $user_inputs["age_range"] = esc_str($connection, $_POST['age_range']);
         $user_inputs["gender"] = esc_str($connection, $_POST['gender']);
 
         $message = validate_inputs($connection, $user_inputs);
@@ -120,11 +108,10 @@ if (isset($_POST['submit'])) {
 <body style="font-family:'Segoe UI'">
     <?php include("{$_SERVER['DOCUMENT_ROOT']}/includes/nav.php") ?>
     <div class="container">
-        <h3 class="mt-5">Heisenberge Polls</h3>
         <h3><?php echo $message ?></h3>
-        <form action="/auth/register" method="POST" class="row g-3 mb-4 mt-4">
+        <form action="/auth/register" method="POST" class="row g-3 mb-4 mt-5 form">
             <!-- Username -->
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <label class="form-label h6" for="inputUsername">Username</label>
                 <div class="input-group">
                     <div class="input-group-text">@</div>
@@ -132,32 +119,17 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
             <!-- Password -->
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <label for="inputPassword4" class="form-label h6">Password</label>
                 <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="xxxxxx">
             </div>
             <!-- Email -->
-            <div class="col-12">
+            <div class="col-md-12">
                 <label for="inputEmail" class="form-label h6">Email</label>
                 <input type="text" class="form-control" id="inputEmail" name="email" placeholder="xxx@xxx.com" value="<?php echo $user_inputs["email"] ?>">
             </div>
-            <!-- Age Range -->
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="age-range" class="form-label h6">Age Range</label>
-                    <select class="form-control" id="age-range" name="age_range">
-                        <option value="11-20">11-20</option>
-                        <option value="21-30">21-30</option>
-                        <option value="31-40">31-40</option>
-                        <option value="41-50">41-50</option>
-                        <option value="51-60">51-60</option>
-                        <option value="61-70">61-70</option>
-                        <option value="71-80">71-80</option>
-                    </select>
-                </div>
-            </div>
             <!-- Gender -->
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <label class="form-label mb-3 h6" style="display: block;">Gender</label>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="gender" id="maleGender" value="male" checked="checked">
@@ -172,16 +144,11 @@ if (isset($_POST['submit'])) {
                     <label class="form-check-label" for="otherGender">Other</label>
                 </div>
             </div>
-            <!-- NIC Number -->
-            <div class="col-12">
-                <label for="inputNic" class="form-label h6">NIC Number</label>
-                <input type="text" class="form-control" id="inputNic" name="nic" placeholder="xxxxxxxxxxx" value="<?php echo $user_inputs["nic"] ?>">
-            </div>
-            <div class="col-12">
+            <div class="col-md-12">
                 <button type="submit" class="btn btn-primary" name="submit">Register</button>
             </div>
+            <h5>Already have an account? <a href="/auth/login">Log In</a></h5>
         </form>
-        <h4>Already have an account? <a href="/auth/login">Log In</a></h4>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
