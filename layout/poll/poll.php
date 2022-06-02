@@ -8,7 +8,7 @@ $message = null;
 
 function fetch_data ($con, $id) {
     // Fetch data from the database
-    $query = "SELECT *, c.id AS candidate_id, DATEDIFF(p.end_date, CURDATE()) AS DaysPassed FROM candidates AS c
+    $query = "SELECT *, c.id AS candidate_id, DATEDIFF(p.end_date, CURDATE()) AS DaysLeft FROM candidates AS c
             INNER JOIN polls AS p ON c.poll_id = p.id
             WHERE c.poll_id = $id;";
     $res = $con->query($query);
@@ -21,7 +21,7 @@ function fetch_data ($con, $id) {
     // Filter the options
     while ( $row = mysqli_fetch_assoc($res) ) {
         // Exit if the end date is passed
-        if ($row["DaysPassed"] < 0) {
+        if ($row["DaysLeft"] < 0) {
             echo "Poll has ended!";
             exit();
         }
@@ -48,7 +48,7 @@ function post_vote($con, $p_id, $c_id) {
     }
     
     // Check whether candidate id is valid with the poll id
-    $query = "SELECT *, DATEDIFF(end_date, CURDATE()) AS DaysPassed FROM candidates AS c
+    $query = "SELECT *, DATEDIFF(end_date, CURDATE()) AS DaysLeft FROM candidates AS c
             INNER JOIN polls AS p ON p.id = c.poll_id AND p.id = $p_id AND c.id = $c_id";
     $res = $con->query($query);
     $rowcount = mysqli_num_rows($res);
@@ -56,7 +56,7 @@ function post_vote($con, $p_id, $c_id) {
         redirectTo("/404");
     }
     $fetched = mysqli_fetch_assoc($res);
-    if ($fetched["DaysPassed"] < 0) {
+    if ($fetched["DaysLeft"] < 0) {
         echo "Poll has ended!";
         exit();
     }
