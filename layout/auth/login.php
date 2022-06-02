@@ -65,8 +65,8 @@ if (isset($_POST['submit'])) {
 <body>
     <?php include("{$_SERVER['DOCUMENT_ROOT']}/includes/nav.php") ?>
     <div class="container body-container">
-        <h6 class="mt-3 mb-4"><?php echo $message ?></h6>
-        <form action="/auth/login" method="POST" class="row g-3 mb-4 mt-5 form">
+        <form action="/auth/login" method="POST" class="row g-3 mb-4 mt-3 form">
+            <h6 class="mt-3"><?php echo $message ?></h6>
             <!-- Username -->
             <div class="col-md-12">
                 <label class="form-label h6" for="inputUsername">Username</label>
