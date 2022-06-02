@@ -10,7 +10,6 @@ $user_inputs = array(
     "description" => null,
     "result_visibility" => null,
     "end_date" => null,
-    "poll_publicity" => null,
     "options" => null
 );
 
@@ -23,10 +22,6 @@ function validate_inputs($inputs)
     if ($inputs["result_visibility"] != "public" && $inputs["result_visibility"] != "private") {
         return "Something's wrong I can feel it";
     }
-
-    if (!is_bool($inputs["poll_publicity"])) {
-        return "Something's wrong I can feel it";
-    }
 }
 
 function create_poll($connection, $inputs, $owner_id)
@@ -36,7 +31,6 @@ function create_poll($connection, $inputs, $owner_id)
     $description = $inputs["description"];
     $result_visibility = $inputs["result_visibility"];
     $end_date = $inputs["end_date"];
-    $poll_publicity = $inputs["poll_publicity"] ? 1 : 0;
     $poll_id = null;
 
     // Insert data to tables
@@ -46,8 +40,8 @@ function create_poll($connection, $inputs, $owner_id)
         $connection->query($query);
 
         // Create the poll
-        $query = "INSERT INTO polls(title, `description`, owner_id, end_date, `private`, results_visibility)
-                    VALUES ('$title', '$description', '$owner_id', '$end_date', $poll_publicity, '$result_visibility');";
+        $query = "INSERT INTO polls(title, `description`, owner_id, end_date, results_visibility)
+                    VALUES ('$title', '$description', '$owner_id', '$end_date', '$result_visibility');";
         $connection->query($query);
         
         // Get poll id
@@ -82,7 +76,6 @@ if (isset($_POST['submit'])) {
         $user_inputs["description"] = esc_str($con, $_POST['description']);
         $user_inputs["result_visibility"] = esc_str($con, $_POST['result_visibility']);
         $user_inputs["end_date"] = esc_str($con, $_POST['end_date']);
-        $user_inputs["poll_publicity"] = isset($_POST['poll_publicity']) ? true : false;
         $user_inputs["options"] = $_POST['options'];
 
         $message = validate_inputs($user_inputs);
@@ -161,14 +154,6 @@ if (isset($_POST['submit'])) {
             <div class="col-md-12">
                 <label for="end-date" class="form-label h6">End date</label>
                 <input type="date" id="end-date" name="end_date" class="form-control">
-            </div>
-            <!-- Private -->
-            <div class="col-md-12 mt-3 slider-par">
-                <label for="poll_publicity" class="form-label h6">Private</label>
-                <label class="switch">
-                    <input type="checkbox" id="poll_publicity" name="poll_publicity" value="false">
-                    <span class="slider round"></span>
-                </label>
             </div>
             <!-- Create Poll -->
             <div class="col-12 mt-4">

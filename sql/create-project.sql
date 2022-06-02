@@ -16,7 +16,6 @@ CREATE TABLE polls (
     `description` VARCHAR(3000),
     owner_id INT REFERENCES users (id) ON DELETE SET NULL,
     end_date DATE NULL,
-    `private` BOOLEAN DEFAULT FALSE NOT NULL,
     results_visibility ENUM('public', 'private') DEFAULT 'public'
 );
 

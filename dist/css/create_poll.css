@@ -56,14 +56,6 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-label[for='poll_publicity'] {
-    position: absolute;
-    /* top: 0.25rem; */
-    top: 50%;
-    transform: translateY(-50%);
-    margin-right: 0.5rem;
-}
-
 #plus-symbol {
     width: 1.25rem;
     height: 1.25rem;
