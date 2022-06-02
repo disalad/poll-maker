@@ -38,9 +38,18 @@
     color: rgba(0, 0, 0, .95) !important;
 }
 
+.navbar-nav {
+    width: 100%;
+    gap: 0.5rem;
+}
+
 @media screen and (min-width: 992px) {
     .sign-up-btn,
     .dropdown {
         margin-left: auto !important;
+    }
+
+    .dropdown-menu.show {
+        left: -6rem !important;
     }
 }

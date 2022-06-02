@@ -5,12 +5,15 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto" style="width: 100%">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/discover">Discover</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/poll/create">Create</a>
                 </li>
                 <?php if (!isset($_SESSION["username"])) : ?>
                     <li class="nav-item sign-up-btn">
@@ -25,8 +28,8 @@
                             <?php echo $_SESSION["username"] ?>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="/settings">Settings</a></li>
                             <li><a class="dropdown-item" href="/auth/logout">Log Out</a></li>
+                            <li><a class="dropdown-item" href="/auth/reset-password">Reset Password</a></li>
                             <li><a class="dropdown-item" href="/auth/delete-account">Delete My Account</a></li>
                         </ul>
                     </li>
