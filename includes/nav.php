@@ -9,6 +9,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/poll/create">Create</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/disaladamsas/poll-maker">Source Code</a>
+                </li>
                 <?php if (!isset($_SESSION["username"])) : ?>
                     <li class="nav-item sign-up-btn">
                         <a class="nav-link" href="/auth/login">Sign In</a>
