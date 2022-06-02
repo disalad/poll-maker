@@ -1,0 +1,53 @@
+.poll {
+    display: flex;
+    flex-direction: column;
+}
+
+.timer {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #00000014;
+}
+
+.poll-data {
+    display: flex;
+    flex-direction: row;
+    gap: 1.25rem;
+}
+
+.votes-count {
+    margin-bottom: 0 !important;
+}
+
+.share-btn {
+    position: relative;
+    cursor: pointer;
+}
+
+.share-btn .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltiptext.show {
+  visibility: visible;
+}
+
+.fa-clock {
+    margin-right: 0.25rem;
+}
+
+.fa-trash-can,
+.fa-share-nodes {
+    height: fit-content;
+    align-self: center;
+}

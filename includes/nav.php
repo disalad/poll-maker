@@ -22,6 +22,7 @@
                             <?php echo $_SESSION["username"] ?>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="/poll/my">My Polls</a></li>
                             <li><a class="dropdown-item" href="/auth/logout">Log Out</a></li>
                             <li><a class="dropdown-item" href="/auth/reset-password">Reset Password</a></li>
                             <li><a class="dropdown-item" href="/auth/delete-account">Delete My Account</a></li>
