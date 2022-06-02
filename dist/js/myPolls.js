@@ -1,10 +1,13 @@
-const trashBtn = document.querySelector(".fa-trash-can");
-const shareBtn = document.querySelector(".fa-share-nodes");
+const trashBtns = document.querySelectorAll(".fa-trash-can");
+const shareBtns = document.querySelectorAll(".fa-share-nodes");
 
-trashBtn.addEventListener("click", deletePost);
+Array.from(trashBtns).forEach((trashBtn) => {
+    trashBtn.addEventListener("click", deletePost);
+})
 
-shareBtn.addEventListener("click", copyUrl2Clipboard);
-
+Array.from(shareBtns).forEach(shareBtn => {
+    shareBtn.addEventListener("click", copyUrl2Clipboard);
+});
 
 function copyUrl2Clipboard(ev) {
     const p_id = this.getAttribute("data-poll-id");
@@ -15,7 +18,7 @@ function copyUrl2Clipboard(ev) {
     navigator.clipboard.writeText(url);
 
     // Show the tooltip
-    const tooltip = document.querySelector(".tooltiptext");
+    const tooltip = this.parentElement.querySelector(".tooltiptext");
     tooltip.classList.add("show");
 
     // Hide the tooltip after 2 seconds
@@ -26,6 +29,5 @@ function copyUrl2Clipboard(ev) {
 
 function deletePost(ev) {
     const p_id = this.getAttribute("data-poll-id");
-    console.error(p_id);
     window.location.href = `/poll/${p_id}/delete`;
 }

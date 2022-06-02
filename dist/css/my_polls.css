@@ -21,7 +21,6 @@
 
 .share-btn {
     position: relative;
-    cursor: pointer;
 }
 
 .share-btn .tooltiptext {
@@ -48,6 +47,7 @@
 
 .fa-trash-can,
 .fa-share-nodes {
+    cursor: pointer;
     height: fit-content;
     align-self: center;
 }

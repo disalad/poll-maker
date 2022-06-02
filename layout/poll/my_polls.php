@@ -19,10 +19,10 @@ function fetch_data($con, $u_id)
         $p_id = $row["id"];
 
         // Get total number of votes for the poll
-        $query = "SELECT COUNT(*) AS vote_count FROM votes
+        $v_query = "SELECT COUNT(*) AS vote_count FROM votes
                 WHERE poll_id = $p_id";
-        $res = $con->query($query);
-        $vote_count = mysqli_fetch_assoc($res)["vote_count"];
+        $v_res = $con->query($v_query);
+        $vote_count = mysqli_fetch_assoc($v_res)["vote_count"];
 
         // Set the voting count in the poll array
         $row["vote_count"] = $vote_count;
@@ -30,7 +30,6 @@ function fetch_data($con, $u_id)
         // Push the poll data to the global variable
         array_push($GLOBALS["polls"], $row);
     }
-    // echo '<pre>', print_r($GLOBALS["polls"], 1), '</pre>';
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "GET") {
@@ -61,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
             <h4>You haven't created any polls yet! <a href="/poll/create">Start Creating</a></h4>
         <?php else : ?>
             <?php foreach ($GLOBALS["polls"] as $idx => $val) : ?>
-                <?php if ($idx > 0): ?>
-                    <hr/>
+                <?php if ($idx > 0) : ?>
+                    <hr class="mb-4 mt-4" />
                 <?php endif; ?>
                 <article class="poll">
                     <div class="poll-info">
@@ -72,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
                         <i class="fa-solid fa-clock"></i>
                         <?php if ($val["DaysLeft"] >= 0) : ?>
                             Voting ends in <?php echo $val["DaysLeft"] + 1 ?> days
-                        <?php else: ?>
+                        <?php else : ?>
                             Voting has ended
                         <?php endif; ?>
                     </div>
@@ -81,10 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
                             <i class="fa-solid fa-circle-check"></i>
                             <?php echo $val["vote_count"] ?>
                         </p>
-                        <i class="fa-solid fa-trash-can" data-poll-id="<?php echo $val["id"] ?>"></i>
+                        <i class="fa-solid fa-trash-can" onclick="deletePost()" data-poll-id="<?php echo $val["id"] ?>"></i>
                         <div class="share-btn">
                             <i class="fa-solid fa-share-nodes" data-poll-id="<?php echo $val["id"] ?>"></i>
-                            <div class="tooltiptext">
+                            <div class="tooltiptext" id="tooltiptext">
                                 <span>Copied to Clipboard</span>
                             </div>
                         </div>

@@ -21,6 +21,8 @@ post('/auth/delete-account', 'layout/auth/delete-account.php');
 get('/poll/create', 'layout/poll/create.php');
 post('/poll/create', 'layout/poll/create.php');
 
+get('/poll/my', 'layout/poll/my_polls.php');
+
 get('/poll/$id', 'layout/poll/poll.php');
 post('/poll/$id', 'layout/poll/poll.php');
 
