@@ -25,7 +25,7 @@ This is an example of how to list things you need to use the software and how to
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/disaladamsas/poll-maker.git
+   git clone https://github.com/disalad/poll-maker.git
    ```
 
 2. Change document root of apache server to project directory
@@ -46,4 +46,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Disala - [@disalad](https://t.me/disalad)
 
-Project Link: [https://github.com/disaladamsas/poll-maker](https://github.com/disaladamsas/poll-maker)
+Project Link: [https://github.com/disalad/poll-maker](https://github.com/disalad/poll-maker)
